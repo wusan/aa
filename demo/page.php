@@ -10,13 +10,13 @@
 
 <table width="100%">
 	<thead>
-		<th>
-			<td width="10%">&nbsp;</td><td width="50%">公告主题</td><td width="40%">公告内容</td>
-		</th>
+		<tr>
+			<td width="10%">id</td><td width="50%">公告主题</td><td width="40%">公告内容</td>
+		</tr>
 	</thead>
 	<?php
-		//$page为当前页，若为空，则设置为1
-		if($page==''){
+		$page=$_GET[page];
+		if($page==''){	//$page为当前页，若为空，则设置为1
 			$page=1;
 		}
 		/*if( false==is_numeric($page) ){//不是数字
@@ -41,24 +41,14 @@
 		do{
 	?>
 	<tr>
-		<td><?php echo $row->title?></td><td><?php echo $row->content?></td>
+		<td><?php echo $row->id;?></td><td><?php echo $row->title?></td><td><?php echo $row->content?></td>
 	</tr>
 	<?php	
 		}while( $row=mysql_fetch_object($sql) );
 	?>
-</table>
 
-<?php
-	do{
-?>
-		<div>
-			<span><em style='color:red;'>编号:</em><?php echo $row->id;?></span>
-			<span><em style='color:red;'>公告标题:</em><?php echo $row->title;?></span>
-			<span><em style='color:red;'>公告内容:</em><?php echo $row->content;?></span>
-		</div>
-<?php	
-	}while( $row=mysql_fetch_object($sql) );
-?>
+
+</table>
 
 <table>
 	<tr>
@@ -79,7 +69,9 @@
 		</td>
 	</tr>
 </table>
-
+<style>
+a{margin:0 5px;padding:5px;}
+</style>
 
 
 
