@@ -1,0 +1,157 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+create database 库名
+show datebases:显示所有数据库
+drop databse 库名：删除某个数据库。
+show engines;//查看mysql支持的存储引擎
+use 库名：选择数据库，以便添加表
+</pre>
+<code><pre>
+create database example;
+show datebases;
+</pre></code>
+
+
+<pre>
+create table 表名(属性 数据类型[完整性约束条件],属性 数据类型[完整性约束条件]...)
+	1.表名：不能为数据库关键字：update create order等等。
+	2.属性之间用逗号分隔。
+	3.完整性约束条件：
+		primary key：主键
+		foreign key：外键。它关联某表的主键
+		not null：该属性不能为空
+		unique:该属性值是唯一的。
+		auto_increment:该属性值自增
+		default：为该属性设置默认值。	
+</pre>
+<pre>
+primary key：主键用于快速查询。因为是唯一的，类似于身份证。它可以是多个字段的组合【身份证也是根据多种信息组成的一个长数字】。
+  primary['praɪməri]:n第一位，adj.主要的，首要的
+   单字段：属性名 数据类型 primary key
+   多字段主键：primary key(属性1，属性2.。。。)
+				注意写在 字段声明最后，  primary key(stu_id,course_id)
+</pre>
+<code>
+	<pre>
+	create table example0(id int,name varchar(20),sex boolean);//整形 字符串和布尔型。
+	create TABLE example1( stu_id INT PRIMARY KEY ,stu_name VARCHAR( 20 ) ,stu_sex BOOLEAN )
+	create table example2(stu_id int,course_id int, grade float, primary key(stu_id,course_id))  ;//多个字段合为主键。
+	</pre>
+</code>
+
+
+<pre>
+foreign key外键：将该表（b表）与a表（将作为父表）连起来。如父表删除某个信息时，子表中与之对应的信息也进行改变。
+					即stu_id是student表的主键，stu_id是grade表的外键。当stu_id=123同学退学时，student表删除该学生信息，
+					同时grade表中stu_id=123的所有信息也同时删除。
+				 1.外键可以为空值。
+				 2.语法：
+					constraint 外键别名 foreign key(属性1.1,属性1.2....) references 表名(属性2.1,属性2.2.。。);
+						外键别名：外键代号。
+						属性1：子表的外键
+						表名：父表名，属性2：父表的主键。
+				 3.子表的外键关联的必须是主表的主键。且数据类型必须一致。否则报错。
+	constraint[kən'streɪnt]	:约束 限制	
+	foreign['fɒrən]:外国的
+	reference[ˈrefrəns]：参考
+	
+</pre>
+<code><pre>
+create table example3(
+	id int primary key,
+	stu_id int,
+	course_id int,
+	constraint c_fk foreign key( stu_id,course_id ) references example2( stu_id,course_id )
+);
+</pre></code>
+
+
+<pre>
+非空:字段值不能为空值(null):若用户插入记录时，该字段为空则报错。
+	语法：属性名 数据类型 not null
+</pre>
+<code><pre>
+create table example4(
+	id int not null primary key,
+	name varchar(20) not null,
+	stu_id int,
+	constraint d_fk foreign key(stu_id) references example1(stu_id)
+)
+</pre></code>
+
+<pre>
+唯一性：所有记录中该字段的值不能重复。eg：id的唯一性
+	语法：属性名 数据类型 unique
+	unique[ju'ni:k]:独一无二的。
+</pre>
+<code><pre>
+create table example5(
+	id int primary key,
+	stu_id int unique,
+	name varchar(20) not null
+)
+</pre></code>
+
+
+<pre>
+属性值自动增加：auto_increment。可用于插入新纪录自动生成唯一的id
+	条件：1.一个表只能有一个字段使用它，且该字段必须是主键的一部分
+		   2.默认，该字段值从1开始自增。
+	语法:属性名 数据类型 auto_increment	  
+increment['ɪŋkrəmənt]:自增长	
+</pre>
+<code><pre>
+create table example6(
+	id int primary key auto_increment,
+	stu_id int unique,
+	name varchar(20) not null
+)
+</pre></code>
+
+
+<pre>
+属性的默认值：插入记录时若不给某个字段设置值时，该记录的这个字段使用默认值
+	语法:属性名 数据类型 default 默认值	  
+</pre>
+<code><pre>
+create table example7(
+	id int primary key auto_increment,
+	stu_id int unique,
+	name varchar(20) not null,
+	English varchar(20) default 'zero',
+	Math float default 0,
+	Computer float default 0
+)
+</pre></code>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
