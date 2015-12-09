@@ -1,0 +1,124 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+desc 表名：查看表结构
+show create table 表名：查看表详细结构[创建表的字段具体设置]。即查看创建该表及字段条件的sql语句
+		eg出现结果：
+		CREATE TABLE `example3` (
+			 `id` int(11) NOT NULL,
+			 `stu_id` int(11) DEFAULT NULL,
+			 `course_id` int(11) DEFAULT NULL,
+			 PRIMARY KEY (`id`),
+			 KEY `c_fk` (`stu_id`,`course_id`),
+			 CONSTRAINT `c_fk` FOREIGN KEY (`stu_id`, `course_id`) REFERENCES `example2` (`stu_id`, `course_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+修改表：
+	改表名：alter table oldname rename newname 
+	改表字段的数据类型：alter table 表名 modify 属性名 数据类型
+	改表字段名：alter table 表名  change oldAttr newAttr 数据类型。
+	
+</pre>
+<code><pre>
+desc example1;
+show create table  example1;
+alter table example0 rename user;
+alter table user modify name varchar(30);
+desc user;//查看是否修改成功。。
+
+desc example1;//看看表字段类型
+alter table example1 change stu_name name varchar(20);
+alter table example1 change stu_sex sex int(2);
+</pre></code>
+
+
+
+<pre>
+增加字段：alter table 表名 add 属性名1 数据类型 [完整性约束条件][first] after 属性名2;
+		first：将该字段作为表的第一个字段
+		after 属性名2:将新字段放到“属性名2”的字段后面
+		若没有first、alter 则新加字段放在表字段最后。
+</pre>
+<code><pre>
+alter table user add phone varchar(20);
+alter table user add age int(4) not null;
+alter table user add num int(8) primary key first;//新加字段为主键且放在最前。
+alter table user add address varchar(20) not null after phone;//指定位置之后添加字段
+</pre></code>
+
+
+<pre>
+删除字段：
+	语法：alter table 表名 drop 属性名
+</pre>
+<code><pre>
+alter table user drop id;//删除id
+
+</pre></code>
+
+<pre>
+修改字段排列外置:
+	语法：alter table 表名 modify 属性1 数据类型 first|alter 属性2
+		属性1：要修改位置的字段
+		数据类型：属性1的
+		first：指定为表的第一个位置
+		alter 属性2：属性1插在属性2后面
+改表的存储引擎:
+	alter table 表名 engine=存储引擎名
+		alter table user engine=myisam
+</pre>
+<code><pre>
+alter table user modify name varchar(30) first;//首位
+alter table user modify sex tinyint(1) after age;//sex放到age后
+
+alter table user engine=myisam;
+show create table user;
+</pre></code>
+
+
+
+<pre>
+删除表外键：
+	语法：alter table 表名 drop foreign key 外键别名;
+</pre>
+<code><pre>
+show create table example3;//先看外键
+alter table example3 drop foreign key c_fk;//删除外键
+</pre></code>
+
+
+
+<pre>
+删除没有关联的表；
+	语法:drop table 表名  
+删除被其他表关联的父表	：需要先删除外键约束。再使用：drop table 表名  
+</pre>
+<code><pre>
+drop table example5;
+
+//删除被其他表关联的父表	  删表example1
+show create table example4;//看外键别名
+alter table example4 drop foreign key d_fk;//删除外键约束 d_fk
+show create table example4;//看外键别名是否被删除。
+drop table example1;
+</pre></code>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
