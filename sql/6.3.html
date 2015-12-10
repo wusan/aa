@@ -1,0 +1,92 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+<pre>
+索引：用于快速查询数据库中的特定记录。
+1.索引对表中1列或多列的值进行排序的一种结构。
+2.查询数据时不必读完记录的所有信息，而只差索引列。
+3.直接查表从第一条记录一直查到底。索引类似于字典的音序表（a,b,c）.通过音序表就可快速查数据。
+4.索引影响插入记录的速度。因为向有索引的表中插入记录时，数据库会按照索引进行排序。
+ 故先删表的索引再插入数据，插入完成后，再创建该索引。
+</pre>
+
+
+
+
+
+<pre>
+创建表时直接创建索引。
+	create table 表名(属性名 数据类型....[UNIQUE|FULLTEXT|SPATIAL] INDEX|KEY [别名] ( 属性名1 [长度] [asc|desc] ) )
+		名词解释：
+			UNIQUE:唯一索引
+			FULLTEXT:全文索引
+			SPATIAL:空间索引
+			index|key:指定字段为索引的
+			别名：给创建的索引另起名
+			属性名1：指定索引对应的字段名称，该字段必须为前面定义好的字段
+			长度：索引的长度（字符串类型才可以）
+			asc|desc：升序、降序
+	全文索引创建条件：只能在char、varchar、text类型的字段上，且MyIsAM存储引擎支持.		
+</pre>
+<code><pre>
+create database indexC;//创建新库
+create table index1(
+	id int,
+	name varchar(20),
+	sex boolean,
+	index(id) 
+);//普通索引
+create table index2(
+	id int unique,
+	name varchar(20),
+	unique index index2_id(id asc)
+);//唯一索引。【index2_id为唯一索引】
+create table index3(
+	id int,
+	info varchar(20),
+	fulltext index index3_info(info)
+) engine=myisam; //全文索引
+
+</pre></code>
+
+
+<pre>
+单列索引：在表的单个字段上创建索引	。
+多列索引：在表的多个字段上创建索引。只有使用了索引中的第一个字段时才会触发索引。	
+</pre>
+<code><pre>
+create table index4(
+	id int,
+	subject varchar(30),
+	index index4_st( subject(10) )
+);//subject(10)索引长度只有10，为了提交查询速度。
+create table index5(
+	name varchar(20),
+	sex char(4),
+	index index5_ns(name,sex)
+);//多字段索引
+explain select *from index5 where name="hjh";//结果possible_keys和key值都是index5_ns，extra(额外信息)：显示正在使用索引。
+explain select *from index5 where sex="n";//possible_keys为null。故只有使用了索引中的第一个字段时才会触发索引。	
+</pre></code>
+
+
+
+<pre>
+空间索引：索引字段必须有非空约束，表的存储引擎必须是myisam	
+</pre>
+<code><pre>
+CREATE TABLE index6(
+	id INT,
+	space GEOMETRY NOT NULL ,
+	spatial INDEX index6_sp( space )
+) ENGINE = MYISAM ;
+
+</pre></code>
+
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+已经存在的表上创建索引。
+	基本形式：create [unique|fulltext|spatial] index 索引名 on 表名（属性名[(长度)] [asc|desc]）
+	全文索引:表的引擎必须是myisam ，字段必须是char、varchar、text类型
+</pre>
+<code><pre>
+create index index7_id on example0(id);//在example0表中的id字段创建index7_id索引。
+create unique index index8_id on index2(id);//唯一索引
+
+CREATE FULLTEXT INDEX indexfo ON index5(name);//全文索引
+create index index10ddr on index3(id(4));//单列索引
+create index index11_na on index4(id,subject);//多列索引
+//create spatial index index12_line on index12(line);//空间索引。引擎必须是myisam，字段必须空间数据类型，且是非空的
+</pre></code>
+
+
+
+<pre>
+alter table创建索引。【已存在的表上创建】
+	alter table表名 add [unique|fulltext|spatial] index  索引名（属性名[(长度)] [asc|desc]）
+	
+	属性名：表的某个字段。
+	 索引名：是"属性名"的别称
+</pre>
+<code><pre>
+建议用alter table而不再使用create
+alter table index1 add index index78_id(id);//普通索引。在index1表中的id字段创建index78_id索引。
+alter table index2 add unique index index14(id);//唯一索引.index2表上创建index14索引。
+
+alter table index2 add FULLTEXT index ind99(name);//全文索引
+alter table index4 add index ind16( subject(20) );//单列索引
+alter table index4 add index ind1226(id,subject(20));//多列索引
+//alter table ind12 add spatial index index12(line);//空间索引。引擎必须是myisam，字段必须空间数据类型，且是非空的
+
+</pre></code>
+
+
+
+
+<pre>
+删除索引:
+	drop index 索引名 on 表名
+</pre>
+
+<code><pre>
+show create table index1;//看看引擎和索引名
+drop index id on index1;
+</pre></code>
+
