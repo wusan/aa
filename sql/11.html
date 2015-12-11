@@ -1,0 +1,60 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+插入数据：insert into 表名 values(v1,v2...);
+	插入的顺序与表中字段的顺序相同。
+insert into 表名(属性1,...) values(v1,....)	:可以随意设置字段的顺序，而不需要按照表定义时的顺序
+</pre>
+<code><pre>
+insert into tb_aff values('21','insert1','内容78','2015-12-08 08:25:02');
+insert into tb_aff(title,id,content,createtime) values('insert1','50','内3容78','2015-12-08 08:25:02');//	随意设置字段的顺序，而不需要按照表定义时的顺序
+insert into tb_aff(title,id,createtime) values('inse333rt1','51','2015-12-11 08:25:02');//插入部分字段	
+</pre></code>
+<pre>
+同时插入多条数据
+	insert into 表名[(属性列表)]  values(取值表1),(取值表1)
+</pre>
+<code><pre>
+	insert into 表名[(属性列表)]  values(取值表1),(取值表1);
+	insert into tb_aff values('210','insert1','内432容4378','2015-12-08 08:25:02'),('211','insert1','内3容78','2015-12-08 08:25:02');//插入2条记录
+	insert into tb_aff(title,id,createtime) values('it1','61','2015-12-11 08:25:02'),('i1','62','2015-12-11 09:25:02');//根据字段插入2条记录
+</pre></code>
+
+<pre>
+将查询结果插入记录
+	insert into 表名1(属性列表1) select 属性列表2 from 表名2 where条件表达式。
+	表名1：要插入的表。
+	属性列表1:为哪些字段赋值
+	属性列表2:从表中查出哪些字段的数据。
+	属性列表1和属性列表2字段个数，及每个对应字段的数据类型是一样的。
+</pre>
+<code><pre>
+create table medicine(id int,name varchar(20),function varchar(20),company varchar(20), address varchar(20));
+create table product(id int,name varchar(20),function varchar(20),company varchar(20), address varchar(20));
+insert into product(id,function,name,address,company) select  id,function,name,address,company from medicine;//把查询出来的多条记录都插入进去。
+</pre></code>
+
+<pre>
+11.2更新数据
+update 表名 set 属性名1=值1,属性名1=值1... where 条件表达式
+属性名1：要更新的字段。
+</pre>
+<code><pre>
+update product set id="10098" where id='2';
+update product set id="100322298" where id='1' or  id='10098';
+</pre></code>
+
+<pre>
+11.3删除数据
+delete from 表名 where 条件表达式
+
+</pre>
+<code><pre>
+delete from product where id=1;
+INSERT INTO  `db_study`.`product` (`id`,`name`,`function`,`company`,`address`) VALUES ('2','343','342','432','342'),('2','432','432','432','432');
+delete from product where id=2;//删除多条记录
+delete from product;//删除所有记录
+</pre></code>
