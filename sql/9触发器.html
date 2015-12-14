@@ -1,0 +1,51 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+触发器：由事件来触发某个操作。事件：insert\update\delete.
+运行这些事件后然后自动调用触发器。
+eg:当给学生表增加一个学生信息时，学生总数必须同时改变。添加一个触发器。insert一条记录时，就这些一次计算学生总数的操作。
+
+语法：
+create trigger 触发器 before|alter 触发事件  on 表名 for each row 执行语句。
+
+	before：在触发事件（insert\update\delete）之前执行触发语句
+	alter:在触发事件（insert\update\delete）之后执行触发语句
+	for each row：表示任何一条记录上的操作满足触发事件都会触发该触发器。
+	"执行语句":触发器被触发后执行的程序。
+</pre>
+<code><pre>
+create trigger dept_trig1 before insert  on departant for each row  insert into trigger_time values(NOW());
+									当向departant表执行insert时，在insert执行前向trigger_time表插入当前时间。
+
+insert into departant values(1002,'销售部负责产品销售');
+
+//create table trigger_time(t1 datetime);   创建时间类型
+   
+</pre></code>
+
+
+<pre>
+1.查看所有触发器:show triggers;
+2.mysql中所有触发器都定义在information_schema库下triggers表中。
+	select * from information_schema.triggers;//查看库中所有触发器
+3.查看某个具体触发器
+	select * from information_schema.triggers where trigger_name="触发器名";	
+4.删除触发器
+	drop trigger 触发器名。  ;//aa.bb代表a库下的b表。触发器名不需要加引号。
+5.触发器执行的顺序；
+		before 触发器--表操作(insert\update\delete)--after触发器。
+</pre>
+<code><pre>
+	select * from information_schema.triggers where trigger_name="dept_trig1";  //查看具体触发器
+	
+	//检查触发顺序 。。。
+		 //创建触发器  [注意：低版本不支持在一个表上同一个操作(插入、删除、更新都只能创建一个触发器)创建多个触发器，故需先删过去的，再创建]
+	drop trigger dept_trig1;	 
+	create trigger before_insert before  insert on departant for each row  insert into t1 values('before_insert');
+	create trigger after_insert  after   insert on departant for each row  insert into t1 value('after_insert');
+	//执行语句
+	insert into departant values(1003,'销售');
+</pre></code>

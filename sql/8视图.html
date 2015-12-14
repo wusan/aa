@@ -1,0 +1,92 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+<pre>
+视图：从1个或多个表中导出的表，是一种虚拟表。作用：便于用户对数据的操作【只看某几个表的某几个字段，而不用看全部】。
+1.数据库只存放视图的定义并不存储视图中的数据。视图从各个表中取相关字段的数据。
+2.通过视图：用户只能修改和查询指定的字段，其余字段用户看不到也修改不了。限制用户的权限到特定的列和行上。
+3.语法：create [algorithm={undefined|merge|temptable}] view 视图名[(属性列表)] 
+				as select 语句 [with [cascaded|local] check option];
+
+		algorithm：视图选择的算法.
+		属性清单：指定视图中的各个属性,默认与select查询的属性一致。
+		select 语句：完整的查询语句。从某表中查询某些满足条件的记录，放入视图中 
+		with check option:更新属兔时要保证在该视图的权限范围之内。
+		cascaded：默认值，表示更新视图时要满足所有相关视图和表的条件
+		local:只满足该视图本身的定义即可。
+</pre>
+<code><pre>
+create table department(d_id int(4) not null,d_name varchar(20) not null,function varchar(50),address varchar(50));//建表
+create table worker(num int(10),d_id int(4),name varchar(20),sex varchar(4),birthday datetime,homeaddress varchar(50));
+ALTER TABLE  `department` ADD PRIMARY KEY (`d_id`);
+</pre></code>
+
+
+<code><pre>
+//创建单表视图
+create view department_view1 as select * from department;
+desc department_view1;//查看表结构  【字段与department 完全一致】
+
+create view d3(name,function,location) as select d_name,function,address from department;//只要3个字段。
+create view d3(name,function,location) as select * from department;//出错。。。因为前面要3个字段，而表中字段不是3个。
+create  view worker_view1(name,department) as select name,department.d_name form worker,department where worker.d_id=department.d_id
+</pre></code>
+<code><pre>
+//多表视图
+create view w32(w_name,d_name,age,w_address) as select name,department.d_name,NOW()-birthday,address from worker,department where worker.d_id=department.d_id;
+		
+create view c99 AS select 列1,列2,列3... from 表1,表2,表...... where		
+</pre></code>
+
+
+
+<pre>
+查看视图： desc 视图名;
+查看视图基本信息：show table status like '视图名';//有引号
+查看视图详细信息：show create view 视图名;//无引号
+修改视图： create or replace [algorithm={undefined|merge|temptable}] view 视图名[(属性列表)] 
+				as select 语句 [with [cascaded|local] check option];
+			参数与创建一致。
+			如果视图不存在，则将创建视图。	
+修改视图：alter可修改表、视图、索引。
+			参数与	create一致。
+删除视图：drop view [if exists] 视图名列表 [restrict|cascade];			
+	if exists:若视图存在则删除，不存在则不执行.
+	视图名列表:多个视图直接用逗号隔开。
+</pre>
+<code><pre>
+create or replace view d355(name,function,location) as select d_name,function,address from department;//修改或创建视图。
+alter view d355(name,function) as select d_name,function from department;//修改成2个字段。
+drop view if exists  d356;删除d356视图
+drop view if exists  d356,d3;//删除2个视图。
+</pre></code>
+
+
+<pre>
+更新视图：通过视图插入、更新、删除表中的数据。因为视图视图时一个虚拟表，没有数据。故视图更新时，都是转到基本表上更新。
+特殊情况不能更新视图；
+	1.视图包含sum()\count()\max()等函数。
+	2.视图包含union\union all\distinct\group by\havig关键字
+	3.常量视图
+	4.视图中select中包含子查询。
+	5.创建视图时，algorithm为temptable类型
+	6.由不可更新的视图导出的视图。
+	7.视图对应的表上存在没有默认值的列，而且该列没有包含在视图里。
+		eg:student中的name没有默认值，虽然视图中不包含此字段，但是在更新视图时，这个没有默认值的记录将没有值插入。
+</pre>
+<code><pre>
+SELECT * FROM  `department` LIMIT 0 , 30;//查看表数据。
+create view d8(name,function,address) as select d_name,function,address from department where d_id="1";//创建一个视图。只影响一条记录。
+update  d8 set name="科研部",function="新产品研发",address="3号楼5层。";//修改视图数据，进而改变了该视图的基本表department的此条记录。
+</pre></code>
+
+
+
+
+
+
+
+
+
+
