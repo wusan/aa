@@ -1,0 +1,53 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+子查询：将一个查询语句嵌套在另一个查询语句中。内层查询结果作为外层查询的条件。
+		1.带in关键字的子查询。not in作用与in关键字相反
+		2.带比较运算符的子查询。eg:=、!=、>= 、< 、<=等
+		3.带exists关键字的子查询。内层查询不返回查询的记录而是返回true和false。
+			若内层查到满足条件的记录则返回true。
+			若返回false则外层查询将不进行查询了。
+		4.any关键字:表示满足其中任一条件。
+			只要满足内层查询语句返回结果的任何一个，就可以通过该条件执行外层查询。
+			any通常与比较运算符一起用。eg:>any 大于任何一个值
+		5.all:满足内层查询所有条件，才能执行外层查询。	
+</pre>
+
+<code><pre>
+select *from employee where d_id in(select d_id from department);
+//in子查询 [先查出department的d_id记录，然后 employee.d_id需要与department的d_id一致时才显示出来。 ]
+select *from employee where d_id not in(select d_id from department);//not in
+</pre></code>
+
+
+<code><pre>
+select *from department where d_id!=( select d_id from employee where age=24 );
+//查询出年龄不是24（employee表）的员工（department表）
+</pre></code>
+
+
+<code><pre>
+select *from employee where exists(select d_name from department where d_id=1003);//有结果。有 d_id=1003记录
+select *from employee where exists(select d_name from department where d_id=100113);//没结果。无 d_id=100113记录
+</pre></code>
+
+
+
+<code><pre>
+create table school(level int,score int(5));
+insert into school values(1,90),(2,80),(3,70);
+
+create table computer(id int,name varchar(10),score int(5));
+insert into computer(id,name,score) values(1001,'lily',85),(1002,'tom',91),(1003,'jack',87),(1004,'aric',77),(1005,'luck',65);
+
+select * from computer where score>=any(select score from scholl);
+//先找到scholl的最低分。然后computer的scroll都要大于最低分。
+//any 满足其中任一条件。scholl里面有70 80 90 分，既然是>=，那肯定最小都要满足70
+
+
+select * from computer where score>=all(select score from scholl);
+//any 满足内层查询所有条件，才能执行外层查询。scholl里面有70 80 90 分，最大的是90.所以满足90即可。
+</pre></code>

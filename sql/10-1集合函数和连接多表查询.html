@@ -1,0 +1,65 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+<pre>
+使用集合函数查询：
+	count():统计记录条数
+	sum：求和。求某个字段取值的总和。
+    avg:求平均值
+	max:求最大值
+	min：求最小值
+</pre>
+<code><pre>
+select count(*) from tb_aff;
+select title,count(*) from tb_aff group by title;//以title进行分组，统计每个分组记录数。
+select num,sum(score) from grade where num=1001;//求score的总和。
+select avg(age) from grade; //求表中age的平均值
+</pre></code>
+
+
+
+<pre>
+连接查询：将2个或2个以上的表按照某个条件连接起来，从中选择需要的数据。
+内连接查询和外连接查询。
+	内连接查询：只查询出指定字段取值相同的记录。
+	外连接查询：不相同的记录也可以查询出来。它分为左连接查询和右连接查询
+				语法：select 属性列表 frome 表1 left|right join 表2 on 表1.属性=表2.属性。
+				on：连接条件
+				left|right：代表左连接或右连接。
+				属性列表：来自多个不同的表中字段。
+	左连接查询：可查出“表1”中所有记录，而"表2"只能查出匹配的记录			
+	右连接：可查出“表2”中所有记录，而"表1"只能查出匹配的记录					
+
+</pre>
+<code><pre>
+//建表等操作
+create table employee(num int,d_id int,name varchar(10),age varchar(2),sex varchar(2),homeaddr varchar(50));
+INSERT INTO  `test`.`employee` (`num` ,`d_id` ,`name` ,`age` ,`sex` ,`homeaddr`)
+	VALUES ('1',  '1001',  '张三',  '26',  '男',  '北京海淀'), ('2',  '1001',  '李四',  '24',  '女',  '昌平'),
+		('3',  '1002',  '王五',  '25',  '男',  '湖南长沙'), ('4',  '1004',  '赵六',  '15',  '男',  'England');
+		
+create table department(d_id int,d_name varchar(10),function varchar(30),address varchar(50));
+INSERT INTO department (`d_id` ,`d_name` ,`function` ,`address`) 
+	VALUES ('1001',  '科研部',  '研发产品',  '3号楼5层'), ('1002',  '生产部',  '生产产品',  '5号楼1层'),('1003',  '销售部',  '策划销售',  '1号楼销售大厅')
+</pre></code>
+
+<code><pre>
+select employee.num,employee.name,employee.d_id,employee.age,
+	   employee.sex,department.d_name,department.function from employee,department 
+	   where employee.d_id=department.d_id;//内连接查询
+
+select num,name,employee.d_id,age,sex,d_name,function from employee left join department on employee.d_id=department.d_id;//左连接查询。
+select num,name,employee.d_id,age,sex,d_name,function from employee right join department on employee.d_id=department.d_id;//右连接查询。
+
+</pre></code>
+<pre>
+复合条件查询：在连接查询时，增加其他的限制条件。eg：age>24
+		
+</pre>
+<code><pre>
+select employee.num,employee.name,employee.d_id,employee.age,
+	   employee.sex,department.d_name,department.function from employee,department 
+	   where employee.d_id=department.d_id and age>24;//复合条件查询
+
+</pre></code>
