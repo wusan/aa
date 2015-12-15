@@ -1,0 +1,38 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+
+</pre>
+<code><pre>
+create table t1(a int);
+INSERT INTO t1(`a`)VALUES ('20'),('20');
+select a,a+5,a*5 from t1;//对t1表中字段a，进行加 和乘操作。[结果会多出2个字段"a+5" "a*5",然后每条记录都给出结果。]
+select a,a<>100,a!=100 from t1;//<>和!=都是“不等于”
+
+
+select a,a=100,a<=>100 from t1;
+// <=>与=一致，但是它可以用来判断null。=只能用于判断字符 数字是否相等。
+// <=>可用来判断是否为控制.相等时返回1，不等时返回0
+
+select a,a is null from t1;
+//is null判断是否为空值(null),是null,返回1，否则返回0
+
+
+select a,a regexp '^2' from t1;//regexp 运算符也是用来判断字符串的。 是否以2开头.。每条记录都判断。是 则返回1，否 则返回0
+
+//x1 like s1: 如果x1与字符串s1匹配，则返回1，否则为0
+select a,a like '北京', a like '2%'  from t1;
+
+//in 判断操作数是否在某个集合中。是则返回1，否则为0。。
+//x1 in(值1，值2，...值n);
+select a,a in (11,20)  from t1;
+
+//between and。判断操作室是否在某个取值范围内。 x1 between m and n.是则返回1，否则为0。。
+select a,a between 13 and 20  from t1;
+</pre></code>
+
+
+
