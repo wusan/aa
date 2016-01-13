@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<pre>
+plaintext:明文[pleɪn'tekst]
+富文本:带有html标记的那种.eg:复制文本时，文本上本身带着html标记。如超链接之类的。
+
+-webkit-user-modify:read-write-plaintext-only：让元素既可以编辑，也只能输入纯文本，
+</pre>
+<div class="a2" id="acc" placeholder='支持富文本'></div>
+<div class="a2" id="acc2" placeholder='纯文本'></div>
+<div class="a2" contenteditable="plaintext-only" placeholder='html属性控制职能为纯文本'></div>
+<style>
+.a2{width:100px;height:100px;border:1px solid #ff7300;margin:10px;overflow:hidden;}
+#acc{-webkit-user-modify:read-write;}
+#acc2{-webkit-user-modify:read-write-plaintext-only;}
+</style>
+
+
+<script>
+
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

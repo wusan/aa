@@ -1,0 +1,156 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style>
+code{border:1px solid #ff7300;padding:5px;margin:5px;}
+</style>
+
+<pre>
+select 属性列表  from 表名和视图列表
+		[where 条件表达式1]
+		[group by 属性名1 [having 条件表达式2] ]
+		[order by 属性名2 [asc|desc] ]
+	属性列表：要查询的字段名;
+	表名和视图列表:从指定的表或视图中查数据，表和视图可以为多个。
+	条件表达式1:查询条件
+	属性名1:按此字段进行排序
+	条件表达式2：满足该表达式的数据才能输出
+	属性名2:按该字段进行排序
+	asc|desc：升序|降序
+	
+
+</pre>
+<code><pre>
+select title,createtime,content from tb_aff;//简单查询。表名不需要加引号。
+select title,createtime,content from tb_aff where id<20 order by createtime desc;//使用where， id<20 按照createtime降序
+
+select createtime,title,id  from tb_aff;//将createtime放在第一列显示
+select *  from tb_aff;//星号显示所有字段
+</pre></code>
+
+<pre>
+  where 条件表达式:查询指定记录。
+	查询条件   符号或关键字
+	比较		=,<=,>=,!=,<>,!>,!<
+	指定范围    between and,not between and
+	指定集合	in,not in
+	匹配字符	like、not like
+	是否空值    is null,is not null
+	多个查询条件 and,or
+	注意：<> 是不等于!= ；!>不大于就是<=
+		   between and指定某字段的取值范文；in 执行某字段的取值的集合。
+		   and 和or 用于连接多个查询条件。
+</pre>
+
+<pre>
+in:判断某个字段的值是否在指定集合中，不在则将不显示此记录。
+[not] in(元素1,..元素n)：not则将不满足这些条件的记录显示。
+</pre>
+<code><pre>
+select * from tb_aff  where id in(5,7);//id=5、id=7的记录显示
+select * from tb_aff  where id not in(5,7);//除了id=5、id=7的记录都显示
+</pre></code>
+
+
+<pre>
+between and:字段值在指定范围内就查找出来。
+[not] between 取值1 and 取值2：同上面相反。
+</pre>
+
+<code><pre>
+select * from tb_aff  where id between 5 and 8;//id=5 6 7 8的显示
+select * from tb_aff  where id not between 5 and 8;//除了id=5 6 7 8的都显示
+</pre></code>
+
+
+<pre>
+like:匹配字符则显示。
+[not] like '字符串'：取反。
+
+	'字符串'：必须加引号。它还可以包含百分号%，或者下划线（_）;
+		%:代表任意长度，长度可以为0. eg:b%k代表b开头 k结尾，中间任何长度的字符串。 bk book break 都满足
+		_:代表单个字符。eg:b_k. b开头 k结尾，中间任意一个字符。
+</pre>
+
+<code><pre>
+select * from tb_aff  where id like '6';//id='6'的显示
+select * from tb_aff  where title like '3%';//title=3开头后面任意长度的字符。
+select * from tb_aff  where title like '3_';//title=3开头后面1个任意的字符。
+select * from tb_aff  where title not like '3_';//取反
+</pre></code>
+
+<pre>
+is [not] null:判断字段值是否为空
+</pre>
+
+<code><pre>
+select * from tb_aff  where content is null;//content字段为空值的记录【空值null而不是空字符串】显示
+select * from tb_aff  where content is not null;取反
+</pre></code>
+
+
+<pre>
+and联合多个查询条件 
+	条件1 and 条件2[...and 条件n]
+	条件可以使用上面给出的in 、between and、is null等等。
+or	联合多个查询条件 。。与and类似。不过只要一个条件满足即可
+</pre>
+
+<code><pre>
+select *from tb_aff where title="中国" and content="中国2222";
+select *from tb_aff where title="中国" and content like "中国%";//content=中国  开头的任意长度字符
+select *from tb_aff where title like "中%" or id="3";//满足一个条件即可。
+</pre></code>
+
+
+
+
+
+
+<pre>
+查询结果不重复：某些字段上没有唯一性约束，则字段值可能就存在重复。
+	select distinct 属性名
+order by 属性名 [asc|desc]:排序	
+</pre>
+
+<code><pre>
+select distinct d_id from employee order by d_id desc;//d_id不重复。查询结果只显示d_id
+select * from employee order by d_id desc;
+</pre></code>
+
+
+
+<pre>
+group by：将查询结果按某个字段或多个字段进行分组。字段中值相等的为一组。
+	grou by 属性名[having 条件表达式][with rollup]
+	属性名：要分组的字段。
+	having条件表达式:用于限制分组后的显示，满足条件的想显示。
+	with rollup：在所有记录之后添加一条记录，记录上面所有记录的总和。
+having条件表达式：用于分组
+where：用于表和视图。	
+</pre>
+
+<code><pre>
+select *from employee group by sex;//按照sex进行分组。。只显示每个分组的一条记录。。男的1条，女的一条。
+select  sex,group_concat(name) from employee group by sex;//记录显示时，每个分组的name值都是显示出来。
+select  sex,count(sex) from employee group by sex;//统计每一组的记录数
+select  sex,count(sex) from employee group by sex having count(sex)>=3;//分组的记录数>=3的显示。
+</pre></code>
+
+<pre>
+按多个字段进行分组。	
+group by 与with rollup一起使用。with rollup 将在所有记录的最后加上一条记录。这条记录是上面所有记录的总和。
+
+</pre>
+<code><pre>
+select * from employee group by d_id,sex;//先按d_id分组，若2条记录d_id值一致的话，则按照sex字段值进行分组。
+select * from employee group by d_id,sex with rollup;
+</pre></code>
+
+<pre>
+limit：限制查询结果的数量。
+limit 记录数。。（不指定起始位置时，记录从第一条记录开始显示）
+limit 初始位置,记录数。。【初始位置：从哪条记录开始显示,limit从0开始计算】
+</pre>
+<code><pre>
+select  * from employee limit 2;//查询结果只显示前2条。
+select  * from employee limit 3,2;//记录从第4条开始【因为limit从0开始计算】，显示2条
+</pre></code>

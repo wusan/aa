@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<pre>
+new Function(p1, p2, … , pn, body)
+Error Objects：
+	Error对象的实例在运行时遇到错误的情况下会被当做异常抛出。Error对象也可以作为用户自定义异常类的基对象。
+Error实例的属性：
+	1.SyntaxError:表示一个解析错误发生
+	2.RangeError:一个数值超出了允许的范围
+	3.ReferenceError:一个不正确的引用值被检测到
+	4.TypeError:一个操作数的真是类型与期望类型不符
+</pre>
+
+
+
+
+<script>
+var km=new Function('a','b','c','return a+b+c');
+var km=new Function('a,b,c','return a+b+c');
+var km=new Function('a,b','c','return a+b+c');
+km(1,2,3);
+</script>
+
+
+
+
+
+
+
+
+</body>
+</html>

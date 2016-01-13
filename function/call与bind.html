@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<pre>
+call([thisObj[,arg1[, arg2[,   [,.argN]]]]]):调用一个对象的一个方法，以另一个对象替换当前对象。
+	说明：
+		call 方法可以用来代替另一个对象调用一个方法。call 方法可将一个函数的对象上下文从初始的上下文改变为由 thisObj 指定的新对象。
+		如果没有提供 thisObj 参数，那么 Global 对象被用作 thisObj。
+
+
+apply([thisObj[,argArray]]) 应用某一对象的一个方法，用另一个对象替换当前对象。
+	说明：
+		如果 argArray 不是一个有效的数组或者不是 arguments 对象，那么将导致一个 TypeError。
+		如果没有提供 argArray 和 thisObj 任何一个参数，那么 Global 对象将被用作 thisObj， 并且无法被传递任何参数。
+
+bind:改变函数内部的上下文this.
+函数扩展bind使用:
+	function() {}.bind(thisArg [, arg1 [, arg2, …]]);
+	即：Fun.bind(this上下文参数,普通参数1，普通参数2...)
+</pre>
+<input type="button" value="clk" id="btn"/>
+<input type="button" value="clk2" id="btn2"/>
+<input type="button" value="text" id="text"/>
+<script>
+var btn=document.getElementById('btn'),
+	btn2=document.getElementById('btn2'),
+	txt=document.getElementById('text');
+btn.onclick=function(){
+	console.log(this.id);// button
+};
+btn2.onclick=function(){
+	console.log(this.id); // text
+}.bind(text);	
+</script>
+
+<div id="btn4">result</div>
+<input type="button" value="clk3--this的不同位置" id="btn3"/>
+<pre>
+slice = Array.prototype.slice;或
+array = Array.prototype.slice.call( array, 0 );
+作用就是：将类似数组的对象转换为真实的数组。
+</pre>
+<script>
+if(!function(){}.bind){//ie6-8
+	Function.prototype.bind=function(context){
+		var self=this,args=Array.prototype.slice.call(arguments);
+		return function(){
+			return self.apply( context,args.slice(1) );
+		}
+	}
+}
+
+
+var obj={
+	color:"#ff7300",
+	element:document.getElementById('btn4'),
+	events:function(){
+		document.getElementById('btn3').addEventListener('click',function(ev){
+			this.element.style.border='1px solid #ff7300';
+			//this指向了obj，而不是单击的btn3
+;		}.bind(this),false);
+	},
+	init:function(){
+		this.events();
+	}
+}
+obj.init();
+</script>
+
+<script>
+var name="小白";
+var fag={
+	name:'哆啦A梦',
+	say:function(){
+		setTimeout(function(a,b){
+			console.log(this.name+a+b);
+		}.bind(this,'今天','干什么'),500)
+	}
+}
+fag.say();
+</script>
+
+
+<pre>
+bind与call很相似,，例如，可接受的参数都分为两部分，且第一个参数都是作为执行时函数上下文中的this的对象。
+	不同点有两个：
+		①bind的返回值是函数
+		②后面的参数的使用也有区别
+</pre>
+<script type="text/javascript">
+function func(name,id) {
+	console.log(name,id,this);
+}
+var obj = "Look here";	
+	func("    ","---");	//什么也不加
+var a1=func.bind(obj,'bind',"---");	//使用bind是:返回改变上下文this后的函数
+a1();
+func.call(obj,'call','---');//使用call:是改变上下文this并执行函数
+</script>
+
+
+<script type="text/javascript">
+function f(a,b,c){
+    console.log(a,b,c);
+}
+var f_Extend = f.bind(null,"extend_A");
+f_Extend("A","B","C")  // extend_A A B
+f_Extend("B","C")  //extend_A B C
+f.call(null,"extend_A") // extend_A undefined undefined
+/**
+call 是 把第二个及以后的参数作为f方法的实参传进去
+而bind 虽说也是获取第二个及以后的参数用于之后方法的执行，但是f_Extend中传入的实参则是在bind中传入参数的基础上往后排的。
+
+
+
+var f_Extend = f.bind(null,"extend_A")
+//相当于
+var f_Extend = function(b,c){
+    return f.call(null,"extend_A",b,c);
+}
+
+
+举一个应用场景：例如现在有一个方法 根据不同的文件类型进行相应的处理，通过bind 就可以创建出简化版的处理方法
+function FileDealFunc(type,url,callback){
+  if(type=="txt"){...}
+  else if(type=="xml"){...}
+  .....
+}
+var TxtDealFunc = FileDealFunc.bind(this,"txt");
+//这样使用的时候更方便一些
+FileDealFunc("txt",XXURL,func);  //原来
+TxtDealFunc(XXURL,func); //现在
+**/
+
+
+
+</script>
+
+
+
+
+
+</body>
+</html>
