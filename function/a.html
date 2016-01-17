@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html" />
+    <meta name="author" content="Prince" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>发布订阅模式</title>
+</head>
+
+<body>
+<pre>
+自定义事件。。发布订阅模式
+</pre>
+
+<script type="text/javascript">
+var salesOffices={};//定义售楼处
+salesOffices.clientList=[];//缓存列表，存放订阅者的回调函数
+salesOffices.listen=function(fn){//增加订阅者
+	this.clientList.push(fn);//订阅的消息添加到缓存列表
+}
+salesOffices.trigger=function(){//发布消息
+	for(var i=0,fn;fn=this.clientList[i++];){
+		fn.apply(this,arguments);//arguments是发布消息时带上的参数。。这里用的好，以及apply
+	}
+}
+
+
+//测试
+salesOffices.listen(function(price,squareMeter){//小明订阅消息
+	console.log('..价格',price,' 平方米=',squareMeter )
+})
+salesOffices.listen(function(price,squareMeter){//小红订阅消息
+	console.log('..价格',price,' 平方米=',squareMeter )
+})
+salesOffices.trigger(2000000,80);
+salesOffices.trigger(3000000,120);
+</script>
+
+</body>	
